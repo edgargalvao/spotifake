@@ -1,192 +1,152 @@
-Não foi possível acessar os arquivos do projeto "spotifake". Por esse motivo, não consigo gerar um `README.md` com as informações específicas do seu projeto.
+Com certeza. Com base em todos os problemas que resolvemos, preparei um `README.md` completo com o passo a passo detalhado para configurar e rodar o projeto do zero, já incluindo as soluções para os erros que encontramos.
 
-No entanto, posso fornecer um modelo completo de `README.md` que você pode preencher. Este modelo inclui todas as seções importantes, com ênfase em "como rodar o projeto", conforme você solicitou.
+Você pode copiar e colar o conteúdo abaixo diretamente no seu arquivo `README.md` na raiz do projeto.
 
 -----
 
 # Spotifake
 
-> Breve descrição do seu projeto. O que ele faz? Qual tecnologia principal ele usa?
-
-## Índice
-
-  - [Visão Geral](https://www.google.com/search?q=%23vis%C3%A3o-geral)
-  - [Pré-requisitos](https://www.google.com/search?q=%23pr%C3%A9-requisitos)
-  - [Instalação](https://www.google.com/search?q=%23instala%C3%A7%C3%A3o)
-  - [Configuração](https://www.google.com/search?q=%23configura%C3%A7%C3%A3o)
-  - [Como Rodar o Projeto](https://www.google.com/search?q=%23como-rodar-o-projeto)
-      - [Com Docker](https://www.google.com/search?q=%23com-docker)
-      - [Manualmente](https://www.google.com/search?q=%23manualmente)
-  - [Estrutura do Projeto](https://www.google.com/search?q=%23estrutura-do-projeto)
-  - [Documentação da API](https://www.google.com/search?q=%23documenta%C3%A7%C3%A3o-da-api)
-  - [Como Contribuir](https://www.google.com/search?q=%23como-contribuir)
+Um clone full-stack do Spotify, construído com React no frontend e Django (com Django REST Framework) no backend.
 
 ## Visão Geral
 
-(Opcional) Forneça uma visão mais detalhada do projeto. Você pode falar sobre a arquitetura, as tecnologias utilizadas e os objetivos do projeto.
+Este projeto é uma aplicação web completa que simula algumas das funcionalidades básicas do Spotify. Ele é dividido em duas partes principais:
+
+  - **Frontend**: Uma aplicação de página única (SPA) construída com React, responsável por toda a interface do usuário.
+  - **Backend**: Uma API RESTful construída com Django, responsável pela lógica de negócio, gerenciamento de usuários, músicas, playlists e banco de dados.
 
 ## Pré-requisitos
 
-Antes de começar, você vai precisar ter as seguintes ferramentas instaladas em sua máquina:
+Antes de começar, certifique-se de que você tem as seguintes ferramentas instaladas:
 
-  - [Node.js](https://nodejs.org/en/) (versão X.X.X)
-  - [Yarn](https://yarnpkg.com/) ou [NPM](https://www.npmjs.com/)
-  - [Docker](https://www.docker.com/products/docker-desktop/) (recomendado)
   - [Git](https://git-scm.com/)
+  - [Python](https://www.python.org/downloads/) (versão 3.8 ou superior)
+  - [Node.js](https://nodejs.org/en/) (que inclui o `npm`)
 
-## Instalação
+## Passo a Passo da Configuração (Setup)
 
-Clone este repositório para a sua máquina local:
+Siga estes passos para configurar o ambiente de desenvolvimento pela primeira vez.
+
+### 1\. Clonar o Repositório
+
+Primeiro, clone o projeto do GitHub para a sua máquina local:
 
 ```bash
 git clone https://github.com/seu-usuario/spotifake.git
 cd spotifake
 ```
 
-Instale as dependências do projeto:
+### 2\. Configurando o Backend (Django)
 
-```bash
-# Usando Yarn
-yarn install
+O backend precisa de um ambiente Python e algumas dependências para funcionar.
 
-# Ou usando NPM
-npm install
-```
-
-## Configuração
-
-A maioria das configurações do projeto é gerenciada por meio de variáveis de ambiente.
-
-1.  **Crie um arquivo de ambiente:**
-    Copie o arquivo de exemplo `.env.example` para um novo arquivo chamado `.env`:
+1.  **Navegue até a pasta do backend:**
 
     ```bash
-    cp .env.example .env
+    cd src/backend/spotifake
     ```
 
-2.  **Preencha as variáveis de ambiente:**
-    Abra o arquivo `.env` e preencha as variáveis com os valores corretos para o seu ambiente de desenvolvimento.
-
-    ```dotenv
-    # Exemplo de variáveis de ambiente
-    PORT=3000
-    DATABASE_URL="postgresql://user:password@localhost:5432/spotifake"
-    SECRET_KEY="sua-chave-secreta"
-    ```
-
-## Como Rodar o Projeto
-
-Esta seção é o foco principal. Descreva os passos para executar a sua aplicação.
-
------
-
-### **Com Docker (Recomendado)**
-
-Usar o Docker é a maneira mais fácil de rodar o projeto, pois ele cuida de toda a configuração do ambiente e do banco de dados.
-
-1.  **Construa e suba os contêineres:**
-    A partir da raiz do projeto, execute o seguinte comando:
+2.  **Crie e ative um Ambiente Virtual (venv):**
+    Isso cria um ambiente isolado para as dependências do Python, o que é uma boa prática.
 
     ```bash
-    docker-compose up --build
+    # Crie o ambiente (só precisa fazer uma vez)
+    python3 -m venv venv
+
+    # Ative o ambiente (faça isso sempre que for trabalhar no backend)
+    # No Linux/macOS:
+    source venv/bin/activate
+    # No Windows:
+    # venv\Scripts\activate
     ```
 
-    O comando `--build` garante que as imagens Docker serão reconstruídas se houver alguma alteração no `Dockerfile`. Para execuções subsequentes, você pode usar apenas `docker-compose up`.
+    Você saberá que funcionou se vir `(venv)` no início do seu prompt de comando.
 
-2.  **Acesse a aplicação:**
-    A aplicação estará disponível em [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) (ou a porta que você configurou no seu arquivo `.env`).
-
-3.  **(Opcional) Executar migrações do banco de dados:**
-    Se o seu projeto utiliza migrações de banco de dados (com Prisma, TypeORM, etc.), você pode precisar executar um comando para aplicá-las.
+3.  **Instale as dependências do Python:**
+    Com o ambiente ativado, instale todos os pacotes necessários, incluindo os que causaram erros anteriormente.
 
     ```bash
-    # Exemplo com Prisma
-    docker-compose exec app npx prisma migrate dev
-
-    # Exemplo com TypeORM
-    docker-compose exec app npm run typeorm:migration:run
+    pip install django djangorestframework django-cors-headers Pillow
     ```
 
-### **Manualmente (Sem Docker)**
-
-Se você preferir não usar o Docker, pode rodar o projeto diretamente na sua máquina.
-
-1.  **Inicie o banco de dados:**
-    Certifique-se de que você tem uma instância do PostgreSQL (ou outro banco de dados que seu projeto usa) rodando localmente e que a `DATABASE_URL` no seu arquivo `.env` está configurada corretamente.
-
-2.  **(Opcional) Execute as migrações:**
-    Aplique as migrações do banco de dados para criar as tabelas necessárias.
+4.  **Execute as Migrações do Banco de Dados:**
+    Este comando cria todas as tabelas necessárias no banco de dados.
 
     ```bash
-    # Exemplo com Prisma
-    npx prisma migrate dev
-
-    # Exemplo com TypeORM
-    npm run typeorm:migration:run
+    python3 manage.py migrate
     ```
 
-3.  **Inicie a aplicação:**
+### 3\. Configurando o Frontend (React)
+
+Agora, em um novo terminal, configure a parte do React.
+
+1.  **Navegue até a pasta do frontend:**
 
     ```bash
-    # Para desenvolvimento, com recarregamento automático (hot-reload)
-    yarn dev
-
-    # Para produção
-    yarn build
-    yarn start
+    # A partir da raiz do projeto 'spotifake'
+    cd src/frontend
     ```
 
-4.  **Acesse a aplicação:**
-    A aplicação estará disponível em [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000).
+2.  **Instale as dependências do Node.js:**
+    Este comando lerá o `package.json` e instalará todas as bibliotecas necessárias, como React, React Hook Form, etc.
 
-## Estrutura do Projeto
+    ```bash
+    npm install
+    ```
 
-Descreva a estrutura de pastas do seu projeto para que outros desenvolvedores possam se orientar.
+## Como Rodar a Aplicação
 
-```
-spotifake/
-├── node_modules/
-├── src/
-│   ├── controllers/    # Controladores (lógica de requisição/resposta)
-│   ├── models/         # Modelos de dados
-│   ├── routes/         # Definição das rotas da API
-│   ├── services/       # Lógica de negócio
-│   ├── database/       # Configuração do banco de dados e migrações
-│   └── server.ts       # Ponto de entrada da aplicação
-├── .env                # Variáveis de ambiente (não versionado)
-├── .env.example        # Exemplo de variáveis de ambiente
-├── .gitignore          # Arquivos ignorados pelo Git
-├── docker-compose.yml  # Configuração do Docker Compose
-├── Dockerfile          # Configuração da imagem Docker
-├── package.json        # Dependências e scripts do projeto
-└── README.md           # Este arquivo
-```
+Depois que o setup inicial estiver completo, siga estes passos sempre que quiser rodar a aplicação. Você precisará de **dois terminais abertos** simultaneamente.
 
-## Documentação da API
+#### **Terminal 1: Rodar o Backend**
 
-(Opcional) Se o seu projeto possui uma API, é uma boa prática documentar os endpoints. Você pode fazer isso aqui ou linkar para uma documentação externa (como Postman ou Swagger).
+1.  Navegue até a pasta do backend: `cd src/backend/spotifake`
+2.  Ative o ambiente virtual: `source venv/bin/activate`
+3.  Inicie o servidor Django:
+    ```bash
+    python3 manage.py runserver
+    ```
+    O backend estará rodando em `http://localhost:8000`. Deixe este terminal aberto.
 
-### Exemplo de Endpoint
+#### **Terminal 2: Rodar o Frontend**
 
-  - **`GET /users`**: Retorna uma lista de todos os usuários.
-      - **Método**: `GET`
-      - **Resposta de Sucesso**: `200 OK`
-        ```json
-        [
-          {
-            "id": 1,
-            "name": "Usuário Exemplo",
-            "email": "exemplo@email.com"
-          }
-        ]
-        ```
+1.  Navegue até a pasta do frontend: `cd src/frontend`
+2.  Inicie a aplicação React:
+    ```bash
+    npm start
+    ```
+    O frontend estará rodando em `http://localhost:3000` e abrirá automaticamente no seu navegador.
 
-## Como Contribuir
+## Solução de Problemas Comuns (Troubleshooting)
 
-Se você deseja que outras pessoas contribuam com o seu projeto, descreva os passos aqui.
+Se você encontrar erros durante a instalação ou execução, tente o seguinte:
 
-1.  Faça um "fork" do projeto.
-2.  Crie uma nova "branch" com as suas alterações (`git checkout -b feature/nova-funcionalidade`).
-3.  Faça o "commit" das suas alterações (`git commit -m 'Adiciona nova funcionalidade'`).
-4.  Envie para a "branch" original (`git push origin feature/nova-funcionalidade`).
-5.  Abra um "Pull Request".
+#### **Erro no Frontend: `Failed to compile`, `Module not found` ou `Failed to load plugin 'jsx-a11y'`**
+
+Isso geralmente indica que a pasta `node_modules` está corrompida ou incompleta. A solução é fazer uma reinstalação limpa:
+
+1.  Pare o servidor (`Ctrl + C`).
+2.  Na pasta `src/frontend`, apague as dependências antigas:
+    ```bash
+    rm -rf node_modules package-lock.json
+    ```
+3.  Limpe o cache do npm (ajuda a evitar usar pacotes corrompidos):
+    ```bash
+    npm cache clean --force
+    ```
+4.  Instale tudo novamente:
+    ```bash
+    npm install
+    ```
+5.  Tente rodar o projeto de novo: `npm start`.
+
+#### **Erro no Backend: `Cannot use ImageField because Pillow is not installed`**
+
+Isso significa que a biblioteca de manipulação de imagens do Python está faltando.
+
+1.  Certifique-se de que seu ambiente virtual (`venv`) está ativado.
+2.  Instale o Pillow:
+    ```bash
+    pip install Pillow
+    ```
+3.  Tente executar o comando do Django novamente.
