@@ -1,8 +1,3 @@
-Com certeza. Com base em todos os problemas que resolvemos, preparei um `README.md` completo com o passo a passo detalhado para configurar e rodar o projeto do zero, já incluindo as soluções para os erros que encontramos.
-
-Você pode copiar e colar o conteúdo abaixo diretamente no seu arquivo `README.md` na raiz do projeto.
-
------
 
 # Spotifake
 
