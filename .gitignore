@@ -3,3 +3,7 @@ venv/
 public/
 node_modules/
 build/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
