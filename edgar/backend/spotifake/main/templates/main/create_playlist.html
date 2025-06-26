@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar nova Playlist</title>
+</head>
+<body> 
+{% block body %}
+<form method="post" class="create-playlist-form">
+    {% csrf_token %}
+    <input placeholder="Name of the playlist..." type="text" name="name-playlist" required>
+    <button type="submit">Create</button>
+</form>
+{% endblock %}
+</body>
+></html>

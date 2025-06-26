@@ -1,0 +1,115 @@
+CREATE PROCEDURE [dbo].[LineFinishing_Counting]
+	@pLineFinishingId UNIQUEIDENTIFIER,
+	@pDelete BIT
+AS
+BEGIN
+	PRINT '[LineFinishing_Counting]'
+
+	DECLARE @vLineId UNIQUEIDENTIFIER;
+	DECLARE @vParentLineId UNIQUEIDENTIFIER;
+	DECLARE @vFinishingId UNIQUEIDENTIFIER;
+	DECLARE @vApplicationId UNIQUEIDENTIFIER;
+	DECLARE @vName VARCHAR(1000);
+	DECLARE @vDescription VARCHAR(1000);
+	DECLARE @vImage VARCHAR(255);
+	DECLARE @vAllowCredit BIT;
+	DECLARE @vNotProvide BIT;
+	DECLARE @vOrder INT;
+
+	DECLARE @vIsActive BIT;
+	DECLARE @vUsuarioModificacaoId UNIQUEIDENTIFIER;
+	DECLARE @vDataModificacao DATETIME;
+
+	DECLARE @vTempLineId UNIQUEIDENTIFIER;
+	DECLARE @vTempFinishingId UNIQUEIDENTIFIER;
+	DECLARE @vTempLineFinishingId UNIQUEIDENTIFIER;
+
+
+	--LER O ACABAMENTO
+	SELECT
+		@vLineId = L.[LineId],
+		@vParentLineId = L.[ParentLineId],
+		@vFinishingId = LF.[FinishingId],
+		@vApplicationId = LF.[ApplicationId],
+		@vName = LF.[Name],
+		@vDescription = LF.[Description],
+		@vAllowCredit = LF.[AllowCredit],
+		@vNotProvide = LF.[NotProvide],
+		@vOrder = LF.[Order],
+		@vImage = LF.[Image]
+	FROM
+		[LineFinishing] AS LF
+		INNER JOIN [Line] AS L ON (LF.[LineId] = L.[LineId])
+	WHERE
+		LF.[LineFinishingId] = @pLineFinishingId;
+
+	PRINT CONCAT('[@vLineId]', @vLineId)
+	PRINT CONCAT('[@vParentLineId]', @vParentLineId)
+	PRINT CONCAT('[@vFinishingId]', @vFinishingId)
+	PRINT CONCAT('[@vApplicationId]', @vApplicationId)
+
+	IF @vParentLineId IS NULL
+	BEGIN
+		DECLARE @vLineFinishingList CURSOR;
+
+		SET @vLineFinishingList = CURSOR FOR
+			SELECT
+				L.[LineId],
+				LF.[LineFinishingId]
+			FROM 
+				[Line] AS L
+				LEFT JOIN [LineFinishing] AS LF ON (
+					L.[LineId] = LF.[LineId] 
+					AND LF.[FinishingId] = @vFinishingId
+					AND LF.[ApplicationId] = @vApplicationId
+				)
+			WHERE
+				L.[ParentLineId] = @vLineId;
+
+		OPEN @vLineFinishingList;
+		FETCH NEXT FROM @vLineFinishingList INTO @vTempLineId, @vTempLineFinishingId;
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			PRINT CONCAT('@vTempLineId', @vTempLineId);
+			PRINT CONCAT('@vTempLineFinishingId', @vTempLineFinishingId);
+			IF (@pDelete = 1)
+			BEGIN
+				PRINT CONCAT('DELETAR', @vTempLineId);	
+			END
+			ELSE IF @vTempLineFinishingId IS NULL
+			BEGIN 
+				INSERT INTO [LineFinishing]
+				([Name], [Description], [AllowCredit], [NotProvide], [Order], [Image]) VALUES
+				(@vName, @vDescription, @vAllowCredit, @vNotProvide, @vOrder, @vImage)
+				
+				PRINT CONCAT('INSERT', @vTempLineId);	
+			END
+			ELSE
+			BEGIN
+				UPDATE
+					[LineFinishing]
+				SET
+					[Name] = @vName,
+					[Description] = @vDescription,
+					[AllowCredit] = @vAllowCredit,
+					[NotProvide] = @vNotProvide,
+					[Order] = @vOrder,
+					[Image] = @vImage
+				WHERE
+					[LineFinishingId] = @vTempLineFinishingId
+					--AND ISNULL([Name], '') <> ISNULL(@vName, '')
+					--AND ISNULL([Description], '') <> ISNULL(@vDescription, '')
+					--AND [AllowCredit] <> @vAllowCredit
+					--AND [NotProvide] <> @vNotProvide
+					--AND [Order] <> @vOrder
+
+				PRINT CONCAT('UPDATE', @vTempLineId);	
+			END
+
+			FETCH NEXT FROM @vLineFinishingList INTO @vTempLineId, @vTempLineFinishingId;
+		END
+		CLOSE @vLineFinishingList;
+		DEALLOCATE @vLineFinishingList;
+	END
+END
+RETURN

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Music App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .song {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .song img {
+            max-width: 150px;
+            max-height: 150px;
+            width: auto;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .play-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .play-button:hover {
+            background-color: #218838;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <h1>Welcome to My Music App</h1>
+    <p>Here are some of my favorite songs:</p>
+
+    {% for song in songs %}
+    <div class="song">
+        <h2>{{ song.title }}</h2>
+        <p>Artist: {{ song.artist }}</p>
+        <p>Album: {{ song.album }}</p>
+        <p>Genre: {{ song.genre }}</p>
+        <button class="play-button" onclick="playSong('{{ song.id }}')">Play</button>
+        <img src="{{ song.cover_image.url }}" alt="Cover image of {{ song.title }}" style="cursor:pointer;"
+            onclick="playSong('{{ song.id }}')">
+        <audio id="audio-{{ song.id }}" controls style="display:none;">
+            <source src="{{ song.audio_file.url }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    {% endfor %}
+
+    <script>
+        function playSong(songId) {
+            // Pause all other audios and hide their controls
+            document.querySelectorAll('audio').forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+                audio.style.display = "none";
+            });
+            // Play and show controls for the selected audio
+            var audio = document.getElementById('audio-' + songId);
+            if (audio) {
+                audio.style.display = "block";
+                audio.play();
+            }
+        }
+    </script>
+
+    {% if play_song %}
+    <h2>Now Playing: {{ play_song.title }}</h2>
+    <audio controls autoplay>
+        <source src="{{ play_song.audio_file.url }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    {% else %}
+    <p>Select a song to play.</p>
+    {% endif %}
+    <p>Thank you for visiting!</p>
+</body>
+
+</html>
