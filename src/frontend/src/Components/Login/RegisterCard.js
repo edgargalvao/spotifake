@@ -131,7 +131,7 @@ const RegisterCard = ({ isOpen, onClose, onSuccess }) => {
               onClick={() => setShowPassword(!showPassword)}
               style={{
                 position: "absolute",
-                right: "45px",
+                right: "15px",
                 top: "50%",
                 transform: "translateY(-50%)",
                 background: "none",

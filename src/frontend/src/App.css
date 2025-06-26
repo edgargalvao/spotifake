@@ -251,3 +251,66 @@ html, body, #root {
     max-height: 200px;
   }
 }
+
+/* Container principal para cada campo de formulário */
+.input-field {
+  position: relative; /* Essencial para ancorar os ícones */
+  margin-bottom: 1.5rem; /* Espaçamento entre os campos */
+  width: 100%;
+}
+
+/* Estilo para os inputs (Usuário e Senha) */
+.input-field input {
+  width: 100%;
+  height: 45px;
+  background-color: #333;
+  border: 1px solid #555;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  
+  /* CRÍTICO: Adiciona espaço para os ícones não ficarem sobre o texto */
+  padding-left: 40px;  /* Espaço para o ícone da esquerda */
+  padding-right: 40px; /* Espaço para o ícone da direita */
+
+  /* CRÍTICO: Garante que o input fique "clicável" */
+  position: relative;
+  z-index: 1;
+}
+
+/* Estilo base para todos os ícones dentro dos campos */
+.input-field .icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  
+  /* CRÍTICO: Coloca os ícones acima do input, mas permite o clique */
+  z-index: 2;
+}
+
+/* Posicionamento específico para o ícone da esquerda */
+.input-field .icon-left {
+  left: 15px;
+  font-size: 16px;
+}
+
+/* Posicionamento específico para o ícone/botão da direita */
+.input-field .icon-right {
+  right: 15px;
+  font-size: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #aaa; /* Garante a mesma cor */
+}
+
+/* Estilo para a mensagem de erro */
+.input-field .error {
+  color: #ff7b7b;
+  font-size: 12px;
+  padding-left: 5px;
+  position: absolute; /* Posiciona o erro logo abaixo do campo */
+  bottom: -22px;
+}
