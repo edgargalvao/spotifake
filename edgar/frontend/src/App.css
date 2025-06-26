@@ -1,0 +1,253 @@
+/* Reset global - aplicado a todas as páginas */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Helvetica;
+}
+
+/* Estilos base para html, body, root - SEM flex */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  font-family: Helvetica, sans-serif;
+}
+
+/* Container específico para a página de LOGIN */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #3c7f8f, #2a5c63);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Estilos do container de login */
+.login-page * {
+  text-shadow: #000 1px 1px;
+  color: #f9f9f9;
+}
+
+/* ===================== */
+/* ===== LOGIN FORM ==== */
+/* ===================== */
+.container {
+  width: 450px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;  
+  padding: 40px;
+}
+
+.container h1 {
+  text-align: center;
+  font-size: 30px;
+  color: #ffff;
+}
+
+.container .input-field {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px auto;
+}
+
+.input-field input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: #fff;
+  padding: 20px 45px 20px 25px;
+}
+
+.input-field input::placeholder {
+  color: #fff;
+}
+
+.input-field .icon {
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #fff;
+}
+
+.container .recall-forget {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14.5px;
+  margin: -15px 0 15px;
+}
+
+.recall-forget label input {
+  accent-color: #fff;
+  margin-right: 4px;
+}
+
+.recall-forget a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.recall-forget a:hover {
+  text-decoration: underline;
+}
+
+.container button {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 700;
+  text-shadow: none;
+}
+
+.container .signup-link {
+  font-size: 14.5px;
+  text-align: center;
+  margin: 20px 0 15px;
+}
+
+.signup-link p a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signup-link p a:hover {
+  text-decoration: underline;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #333;
+  padding: 2rem;
+  border-radius: 8px;
+  min-width: 320px;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 0.5rem;
+  cursor: pointer;
+  color: #ff0000;
+}
+
+/* ===================== */
+/* ===== DASHBOARD GRID ==== */
+/* ===================== */
+.dashboard-container {
+  display: grid;
+  grid-template-areas: 
+    "sidebar main"
+    "bottom bottom";
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 1fr auto;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Menu Lateral */
+.sidebar {
+  grid-area: sidebar;
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.sidebar-content {
+  height: 100%;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+/* Conteúdo Principal */
+.main-content {
+  grid-area: main;
+  background-color: #f8f9fa;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.content-area {
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.content-area h1 {
+  color: #2c3e50;
+  text-shadow: none;
+}
+
+.content-area p {
+  color: #495057;
+  text-shadow: none;
+}
+
+/* Barra Inferior */
+.bottom-bar {
+  grid-area: bottom;
+  background-color: #34495e;
+  color: white;
+  padding: 10px 20px;
+  border-top: 1px solid #2c3e50;
+}
+
+.bottom-bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.bottom-bar p {
+  margin: 0;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .dashboard-container {
+    grid-template-areas: 
+      "main"
+      "sidebar"
+      "bottom";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto auto;
+  }
+  
+  .sidebar {
+    max-height: 200px;
+  }
+}
