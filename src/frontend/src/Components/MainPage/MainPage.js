@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
-import "../../Login.css";
-import Login from '../Login/Login';
+import Profile from '../Profile/Profile';
 
 const MainPage = () => {
   return (
@@ -13,7 +12,7 @@ const MainPage = () => {
 
       <main className="main-content">
         <div className="content-area">
-          <p>Main Content</p>
+          <Profile />
         </div>
       </main>
 

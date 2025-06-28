@@ -4,10 +4,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from random import choice
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions,viewsets
 from .serializers import UserProfileSerializer, SongSerializer, PlaylistSerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .models import Song
+from .serializers import SongSerializer
 import json
 
 # API Views para React consumir
@@ -111,3 +113,7 @@ def login_user(request):
         except json.JSONDecodeError:
             return JsonResponse({'error': 'JSON inválido.'}, status=400)
     return JsonResponse({'error': 'Método não permitido.'}, status=405)
+
+class SongViewSet(viewsets.ModelViewSet):
+    queryset = Song.objects.all()
+    serializer_class = SongSerializer
