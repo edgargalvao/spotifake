@@ -18,9 +18,14 @@ export default function MusicUpload() {
       file,
       name: file.name,
       size: file.size,
-      status: 'ready', // ready, uploading, success, error
+      status: 'ready',
       progress: 0,
-      url: URL.createObjectURL(file)
+      url: URL.createObjectURL(file),
+      // Novos campos para metadados
+      title: file.name.replace(/\.[^/.]+$/, ''),
+      artist: '',
+      album: '',
+      genre: ''
     }));
 
     setUploadedFiles(prev => [...prev, ...newFiles]);
@@ -78,32 +83,87 @@ export default function MusicUpload() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const simulateUpload = (fileId) => {
+  // Função para enviar um arquivo para o backend
+  const uploadFileToBackend = async (fileObj) => {
+    const formData = new FormData();
+    // Use os nomes em português conforme o serializer espera
+    formData.append('titulo', fileObj.title);
+    formData.append('artista', fileObj.artist);
+    formData.append('album', fileObj.album);
+    formData.append('genero', fileObj.genre);
+    formData.append('arquivo_audio', fileObj.file);
+    // Se quiser permitir imagem de capa, adicione: formData.append('imagem_capa', ...)
+
+    try {
+      const response = await fetch('http://localhost:8000/api/song-upload/', {
+        method: 'POST',
+        body: formData
+      });
+      if (response.ok) {
+        return { success: true };
+      } else {
+        return { success: false };
+      }
+    } catch (err) {
+      return { success: false };
+    }
+  };
+
+  // Substitui simulateUpload para upload real
+  const simulateUpload = async (fileId) => {
+    const fileObj = uploadedFiles.find(f => f.id === fileId);
+    // Só faz upload se todos os campos estiverem preenchidos
+    if (!fileObj.title || !fileObj.artist || !fileObj.album || !fileObj.genre) {
+      setUploadedFiles(prev => prev.map(file =>
+        file.id === fileId ? { ...file, status: 'error', progress: 0 } : file
+      ));
+      return;
+    }
     setUploadedFiles(prev => prev.map(file => 
       file.id === fileId ? { ...file, status: 'uploading', progress: 0 } : file
     ));
 
+    // Simula progresso
+    let progress = 0;
     const interval = setInterval(() => {
+      progress += Math.random() * 40;
       setUploadedFiles(prev => prev.map(file => {
         if (file.id === fileId) {
-          const newProgress = Math.min(file.progress + Math.random() * 30, 100);
-          if (newProgress >= 100) {
-            clearInterval(interval);
-            return { ...file, status: 'success', progress: 100 };
-          }
-          return { ...file, progress: newProgress };
+          return { ...file, progress: Math.min(progress, 95) };
         }
         return file;
       }));
-    }, 500);
+    }, 300);
+
+    // Faz upload real
+    const result = await uploadFileToBackend(fileObj);
+    clearInterval(interval);
+    setUploadedFiles(prev => prev.map(file => {
+      if (file.id === fileId) {
+        if (result.success) {
+          return { ...file, status: 'success', progress: 100 };
+        } else {
+          return { ...file, status: 'error', progress: 0 };
+        }
+      }
+      return file;
+    }));
   };
 
+  // Substitui uploadAll para upload real
   const uploadAll = () => {
     uploadedFiles.forEach(file => {
       if (file.status === 'ready') {
         simulateUpload(file.id);
       }
     });
+  };
+
+  // Adiciona função para atualizar metadados
+  const updateFileMeta = (fileId, field, value) => {
+    setUploadedFiles(prev => prev.map(file =>
+      file.id === fileId ? { ...file, [field]: value } : file
+    ));
   };
 
   return (
@@ -155,7 +215,6 @@ export default function MusicUpload() {
                 Upload de Todos
               </button>
             </div>
-
             <div className="files-list">
               {uploadedFiles.map(file => (
                 <div key={file.id} className="file-item">
@@ -166,6 +225,11 @@ export default function MusicUpload() {
                     <div className="file-details">
                       <h4 className="file-name">{file.name}</h4>
                       <p className="file-size">{formatFileSize(file.size)}</p>
+                      {/* Inputs para metadados */}
+                      <input type="text" placeholder="Título" value={file.title} onChange={e => updateFileMeta(file.id, 'title', e.target.value)} className="meta-input" />
+                      <input type="text" placeholder="Artista" value={file.artist} onChange={e => updateFileMeta(file.id, 'artist', e.target.value)} className="meta-input" />
+                      <input type="text" placeholder="Álbum" value={file.album} onChange={e => updateFileMeta(file.id, 'album', e.target.value)} className="meta-input" />
+                      <input type="text" placeholder="Gênero" value={file.genre} onChange={e => updateFileMeta(file.id, 'genre', e.target.value)} className="meta-input" />
                     </div>
                   </div>
 

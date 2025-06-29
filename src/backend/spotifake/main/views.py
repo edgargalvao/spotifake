@@ -11,6 +11,10 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Song, UserProfile
 from .serializers import SongSerializer
 import json
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 # API Views para React consumir
 class SongListAPIView(generics.ListAPIView):
@@ -161,3 +165,15 @@ def register_user(request):
 class SongViewSet(viewsets.ModelViewSet):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
+
+class SongUploadAPIView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, format=None):
+        print('POST DATA:', request.data)
+        serializer = SongSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print('ERRORS:', serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
