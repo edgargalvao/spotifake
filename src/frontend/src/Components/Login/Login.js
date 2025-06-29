@@ -27,7 +27,13 @@ const Login = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("Login realizado:", result);
-        navigate("/MainPage"); // Redireciona para a página principal após o login
+
+        // Modificação: Salve os dados do usuário no localStorage
+        if (result.user) {
+          localStorage.setItem('user', JSON.stringify(result.user));
+        }
+        
+        navigate("/MainPage");
       } else {
         alert("Usuário ou senha incorretos.");
       }

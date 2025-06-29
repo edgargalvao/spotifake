@@ -3,7 +3,7 @@ import './Profile.css';
 import MusicUpload from './MusicUpload';
 import PlaylistSongs from '../Musicas/PlaylistSongs.js';
 
-export default function MusicProfile() {
+export default function MusicProfile({ user }) {
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   return (
@@ -26,7 +26,7 @@ export default function MusicProfile() {
 
         {/* Nome e Título */}
         <div className="profile-info">
-          <h1 className="artist-name">Luna Morena</h1>
+          <h1 className="artist-name">{user ? user.username : 'Carregando...'}</h1>
           <p className="artist-title">Artista Musical</p>
         </div>
 
