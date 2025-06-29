@@ -5,7 +5,7 @@ import MusicPlayer from '../MusicPlayer/MusicPlayer';
 
 const MainPage = () => {
   const [user, setUser] = useState(null);
-
+  const [currentSong, setCurrentSong] = useState(null);
   // Modificação: Puxe os dados do usuário do localStorage quando o componente montar
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -13,6 +13,7 @@ const MainPage = () => {
       setUser(JSON.parse(storedUser));
     }
   }, []); // O array vazio [] garante que isso rode apenas uma vez
+
 
   return (
     <div className="dashboard-container">

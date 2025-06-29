@@ -2,9 +2,20 @@ import React, { useState } from 'react';
 import './Profile.css';
 import MusicUpload from './MusicUpload';
 import PlaylistSongs from '../Musicas/PlaylistSongs.js';
+import SongList from '../Musicas/SongList';
+import MusicPlayer from '../MusicPlayer/MusicPlayer';
 
 export default function MusicProfile({ user }) {
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [currentSong, setCurrentSong] = useState(null);
+  const [currentTitle, setCurrentTitle] = useState('');
+  const [currentArtist, setCurrentArtist] = useState('');
+
+  const handleSelectSong = (audioUrl, title, artist) => {
+    setCurrentSong(audioUrl);
+    setCurrentTitle(title);
+    setCurrentArtist(artist);
+  };
 
   return (
     <div className="profile-page">
@@ -47,6 +58,8 @@ export default function MusicProfile({ user }) {
         </button>
       </div>
       <PlaylistSongs  />
+      {/* Lista de músicas */}
+      <SongList onSelect={(audioUrl) => handleSelectSong(audioUrl.url, audioUrl.title, audioUrl.artist)} />
       {/* Modal */}
       {showUploadModal && (
         <div className="modal-overlay">
@@ -58,6 +71,10 @@ export default function MusicProfile({ user }) {
           </div>
         </div>
       )}
+      {/* Player fixo na página do perfil */}
+      <div style={{ marginTop: 32 }}>
+        <MusicPlayer src={currentSong} title={currentTitle} artist={currentArtist} />
+      </div>
     </div>
   );
 }

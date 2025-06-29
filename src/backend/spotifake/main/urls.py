@@ -3,6 +3,9 @@ from .views import login_user, check_user_exists, logout_user, profile, create_p
 from .views import SongListAPIView, PlaylistListAPIView, UserProfileAPIView
 from rest_framework.routers import DefaultRouter
 from .views import SongViewSet, SongUploadAPIView
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 router = DefaultRouter()
 router.register(r'songs', SongViewSet)
@@ -25,3 +28,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
 ]
 
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
