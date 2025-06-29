@@ -6,6 +6,16 @@ import MusicPlayer from '../MusicPlayer/MusicPlayer';
 const MainPage = () => {
   const [user, setUser] = useState(null);
   const [currentSong, setCurrentSong] = useState(null);
+  const [currentTitle, setCurrentTitle] = useState('');
+  const [currentArtist, setCurrentArtist] = useState('');
+
+  // Função para tocar música globalmente
+  const handleSelectSong = (audioUrl, title, artist) => {
+    setCurrentSong(audioUrl);
+    setCurrentTitle(title);
+    setCurrentArtist(artist);
+  };
+
   // Modificação: Puxe os dados do usuário do localStorage quando o componente montar
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -22,7 +32,8 @@ const MainPage = () => {
           <h3>Menu</h3>
           {/* Exemplo de como usar a informação */}
           {user && <p>Bem-vindo, {user.username}!</p>}
-          <Profile user={user} />
+          {/* Passe handleSelectSong para o Profile */}
+          <Profile user={user} onSelectSong={handleSelectSong} />
         </div>
         
       </aside>
@@ -47,7 +58,8 @@ const MainPage = () => {
         boxShadow: "0 -2px 8px rgba(0,0,0,0.3)",
         zIndex: 100
       }}>
-        <MusicPlayer />
+        {/* Passe as props para o player global */}
+        <MusicPlayer src={currentSong} title={currentTitle} artist={currentArtist} />
       </footer>
     </div>
   );

@@ -181,6 +181,117 @@
   border-radius: 8px;
   cursor: pointer;
 }
+
+/* ===== SIDEBAR MELHORADA ===== */
+.sidebar {
+  background: rgba(24, 26, 34, 0.98);
+  min-width: 270px;
+  max-width: 320px;
+  height: 100vh;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+  padding: 32px 18px 24px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 200;
+  overflow-y: auto;
+}
+
+.sidebar-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.sidebar h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px #0004;
+}
+
+.sidebar .profile-description {
+  background: rgba(44, 62, 80, 0.22);
+  border-radius: 14px;
+  padding: 18px 16px;
+  margin-bottom: 0;
+  box-shadow: 0 2px 8px #0002;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.sidebar .description-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.sidebar .description-content p {
+  color: #e0e0e0;
+  font-size: 1rem;
+  margin: 0;
+  text-align: left;
+}
+
+.sidebar .open-upload-modal-button {
+  background: linear-gradient(90deg, #4a63e7 60%, #1db954 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+  margin-top: 18px;
+  box-shadow: 0 2px 8px #0002;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.sidebar .open-upload-modal-button:hover {
+  background: linear-gradient(90deg, #1db954 60%, #4a63e7 100%);
+  box-shadow: 0 4px 16px #1db95444;
+}
+
+.song-list {
+  background: rgba(44, 62, 80, 0.13);
+  border-radius: 12px;
+  padding: 18px 12px 12px 12px;
+  margin-top: 18px;
+  box-shadow: 0 2px 8px #0001;
+}
+.song-list h2 {
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.song-list ul {
+  padding: 0;
+  margin: 0;
+}
+.song-list li {
+  margin-bottom: 8px;
+}
+.song-list button {
+  background: none;
+  border: none;
+  color: #1db954;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.song-list button:hover {
+  color: #4a63e7;
+  text-decoration: underline;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .profile-container {
@@ -237,5 +348,30 @@
   
   .profile-description {
     padding: 16px;
+  }
+}
+
+/* Responsividade para sidebar */
+@media (max-width: 900px) {
+  .sidebar {
+    min-width: 180px;
+    max-width: 220px;
+    padding: 18px 8px 12px 8px;
+  }
+  .sidebar-content {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    position: static;
+    width: 100vw;
+    min-width: unset;
+    max-width: unset;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 10px 2vw 10px 2vw;
   }
 }

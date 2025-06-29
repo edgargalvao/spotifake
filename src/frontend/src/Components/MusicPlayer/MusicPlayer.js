@@ -1,12 +1,30 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
-const MusicPlayer = () => {
+const MusicPlayer = ({ src, title, artist }) => {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(0.6);
   const duration = audioRef.current?.duration || 0;
   const currentTime = audioRef.current?.currentTime || 0;
+
+  // Tocar automaticamente ao mudar a música
+  useEffect(() => {
+    if (audioRef.current && src) {
+      audioRef.current.load();
+      audioRef.current.play();
+      setPlaying(true);
+    } else {
+      setPlaying(false);
+    }
+  }, [src]);
+
+  // Atualizar volume do elemento de áudio
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
 
   const handlePlayPause = () => {
     if (!audioRef.current) return;
@@ -59,8 +77,8 @@ const MusicPlayer = () => {
       <img src="https://i.scdn.co/image/ab67616d0000b273b1e2e2e2e2e2e2e2e2e2e2e2" alt="Album" style={{ width: 48, height: 48, borderRadius: 6, marginRight: 12, objectFit: "cover", boxShadow: "0 2px 8px #0006" }} />
       {/* Song Info */}
       <div style={{ minWidth: 0, flex: 1 }}>
-        <div style={{ fontWeight: 600, fontSize: 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Musica Teste</div>
-        <div style={{ fontSize: 13, color: "#b3b3b3", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Teste</div>
+        <div style={{ fontWeight: 600, fontSize: 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{title || 'Selecione uma música'}</div>
+        <div style={{ fontSize: 13, color: "#b3b3b3", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{artist || ''}</div>
       </div>
       {/* Controls */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginLeft: 16, marginRight: 16 }}>
@@ -83,12 +101,11 @@ const MusicPlayer = () => {
       </div>
       <audio
         ref={audioRef}
-        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        src={src || ''}
         onTimeUpdate={handleTimeUpdate}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onLoadedMetadata={handleTimeUpdate}
-        volume={volume}
       />
     </div>
   );
