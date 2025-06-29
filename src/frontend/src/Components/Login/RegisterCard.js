@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { FaUser, FaLock, FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
+import { FaUser, FaLock, FaEye, FaEyeSlash, FaTimes, FaEnvelope } from "react-icons/fa";
 
 const RegisterCard = ({ isOpen, onClose, onSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +25,7 @@ const RegisterCard = ({ isOpen, onClose, onSuccess }) => {
     setIsLoading(true);
     try {
       await new Promise((res) => setTimeout(res, 1000));
-      const res = await fetch("/api/register/", {
+      const res = await fetch("http://localhost:8000/api/register/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -113,6 +113,34 @@ const RegisterCard = ({ isOpen, onClose, onSuccess }) => {
             />
             <FaUser className="icon" style={{ fontSize: "14px" }} />
             {errors.username && <p className="error">{errors.username.message}</p>}
+          </div>
+
+          {/* Email */}
+          <div className="input-field">
+            <input
+              type="email"
+              placeholder="Email"
+              {...register("email", {
+                required: "Email é obrigatório",
+                pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Email inválido" }
+              })}
+            />
+            <FaEnvelope className="icon" style={{ fontSize: "14px" }} />
+            {errors.email && <p className="error">{errors.email.message}</p>}
+          </div>
+
+          {/* Nome */}
+          <div className="input-field">
+            <input
+              type="text"
+              placeholder="Nome completo"
+              {...register("name", {
+                required: "Nome é obrigatório",
+                minLength: { value: 2, message: "Mínimo de 2 caracteres" }
+              })}
+            />
+            <FaUser className="icon" style={{ fontSize: "14px" }} />
+            {errors.name && <p className="error">{errors.name.message}</p>}
           </div>
 
           {/* Password */}

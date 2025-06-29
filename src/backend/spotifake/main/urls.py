@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import login_user, check_user_exists, logout_user, profile, create_playlist, view_playlist, all_playlists
+from .views import login_user, check_user_exists, logout_user, profile, create_playlist, view_playlist, all_playlists, register_user
 from .views import SongListAPIView, PlaylistListAPIView, UserProfileAPIView
 from rest_framework.routers import DefaultRouter
 from .views import SongViewSet
@@ -10,6 +10,7 @@ router.register(r'songs', SongViewSet)
 urlpatterns = [
     path('api/login/', login_user, name='login_user'),
     path('api/check-user/', check_user_exists, name='check_user_exists'),
+    path('api/register/', register_user, name='register_user'),
     path('logout/', logout_user, name='logout_user'),
 
     path('profile/', profile, name='profile'),

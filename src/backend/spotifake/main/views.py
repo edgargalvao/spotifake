@@ -8,7 +8,7 @@ from rest_framework import generics, permissions,viewsets
 from .serializers import UserProfileSerializer, SongSerializer, PlaylistSerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Song
+from .models import Song, UserProfile
 from .serializers import SongSerializer
 import json
 
@@ -105,13 +105,57 @@ def login_user(request):
             password = data.get('password')
 
             user = authenticate(request, username=username, password=password)
+            
             if user is not None:
                 login(request, user)
-                return JsonResponse({'message': 'Login bem-sucedido.'}, status=200)
+                # Modificação: Retorne os dados do usuário
+                return JsonResponse({
+                    'message': 'Login bem-sucedido.',
+                    'user': {
+                        'id': user.id,
+                        'username': user.username,
+                        'email': user.email
+                        # Adicione outros campos se necessário
+                    }
+                }, status=200)
             else:
                 return JsonResponse({'error': 'Usuário ou senha inválidos.'}, status=401)
         except json.JSONDecodeError:
             return JsonResponse({'error': 'JSON inválido.'}, status=400)
+    
+    return JsonResponse({'error': 'Método não permitido.'}, status=405)
+@csrf_exempt
+def register_user(request):
+    if request.method == 'POST':
+        try:
+            if request.content_type == 'application/json':
+                data = json.loads(request.body)
+                username = data.get('username')
+                email = data.get('email')
+                password = data.get('password')
+                name = data.get('name')
+                icon_image = None  # Não suporta upload de arquivo via JSON
+            else:
+                username = request.POST.get('username')
+                email = request.POST.get('email')
+                password = request.POST.get('password')
+                name = request.POST.get('name')
+                icon_image = request.FILES.get('icon_image')
+
+            if not all([username, email, password, name]):
+                return JsonResponse({'error': 'Todos os campos obrigatórios.'}, status=400)
+
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.save()
+
+            user_profile = UserProfile(user=user, name=name)
+            if icon_image:
+                user_profile.icon_image = icon_image
+            user_profile.save()
+
+            return JsonResponse({'message': 'Usuário registrado com sucesso.'}, status=201)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'error': 'Método não permitido.'}, status=405)
 
 class SongViewSet(viewsets.ModelViewSet):

@@ -1,18 +1,32 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+
 import Profile from '../Profile/Profile';
 
 const MainPage = () => {
+  const [user, setUser] = useState(null);
+
+  // Modificação: Puxe os dados do usuário do localStorage quando o componente montar
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []); // O array vazio [] garante que isso rode apenas uma vez
+
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
         <div className="sidebar-content">
           <h3>Menu</h3>
+          {/* Exemplo de como usar a informação */}
+          {user && <p>Bem-vindo, {user.username}!</p>}
         </div>
       </aside>
 
       <main className="main-content">
         <div className="content-area">
-          <Profile />
+          {/* Passe o usuário como prop para outros componentes */}
+          <Profile user={user} />
         </div>
       </main>
 
