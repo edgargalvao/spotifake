@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views import login_user, check_user_exists, logout_user, profile, create_playlist, view_playlist, all_playlists, register_user
 from .views import SongListAPIView, PlaylistListAPIView, UserProfileAPIView
 from rest_framework.routers import DefaultRouter
-from .views import SongViewSet, SongUploadAPIView, PlaylistFeedView, delete_playlist, create_playlist_api
+from .views import SongViewSet, SongUploadAPIView, PlaylistFeedView, delete_playlist, create_playlist_api, update_playlist
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/feed/playlists/<int:user_id>/', PlaylistFeedView.as_view(), name='playlist-feed'),
     path('api/playlists/<int:pk>/delete/', delete_playlist, name='delete-playlist'),
     path('api/playlists/create/', create_playlist_api, name='create-playlist-api'),
+    path('api/playlists/<int:pk>/update/', update_playlist, name='update_playlist'),
 
     path('api/', include(router.urls)),
 

@@ -269,6 +269,34 @@ def delete_playlist(request, pk):  # <-- Aqui muda para 'pk'
 
 
 @csrf_exempt
+@require_http_methods(["PUT"])
+def update_playlist(request, pk):
+    try:
+        data = json.loads(request.body)
+        name = data.get('name')
+        user_id = data.get('user_id')
+        song_ids = data.get('song_ids', [])
+
+        if not name or not user_id:
+            return JsonResponse({'success': False, 'error': 'Nome e usuário são obrigatórios.'}, status=400)
+
+        playlist = Playlist.objects.get(id=pk)
+        user = User.objects.get(id=user_id)
+
+        playlist.name = name
+        playlist.user = user
+        playlist.save()
+
+        playlist.song.set(Song.objects.filter(id__in=song_ids))
+
+        return JsonResponse({'success': True, 'message': 'Playlist atualizada com sucesso.'})
+    except Playlist.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Playlist não encontrada.'}, status=404)
+    except User.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Usuário não encontrado.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+@csrf_exempt
 def create_playlist_api(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Método não permitido'}, status=405)
