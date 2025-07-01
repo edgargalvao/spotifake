@@ -168,9 +168,12 @@ html, body, #root {
     "sidebar main"
     "bottom bottom";
   grid-template-columns: 250px 1fr;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: calc(100vh - 80px) 80px;
   height: 100vh;
   width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 /* Menu Lateral */
@@ -182,6 +185,9 @@ html, body, #root {
   overflow-y: auto;
   min-width: 570px;
   max-width: 620px;
+  height: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .sidebar-content {
@@ -224,10 +230,16 @@ html, body, #root {
 /* Barra Inferior */
 .bottom-bar {
   grid-area: bottom;
-  background-color: #34495e;
+  background-color: #181818;
   color: white;
-  padding: 10px 20px;
+  padding: 0;
   border-top: 1px solid #2c3e50;
+  height: 80px;
+  position: relative;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
 }
 
 .bottom-bar-content {
@@ -249,11 +261,13 @@ html, body, #root {
       "sidebar"
       "bottom";
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto auto;
+    grid-template-rows: calc(50vh - 40px) calc(50vh - 40px) 80px;
   }
   
   .sidebar {
-    max-height: 2000px;
+    max-height: calc(50vh - 40px);
+    min-width: auto;
+    max-width: none;
   }
 }
 

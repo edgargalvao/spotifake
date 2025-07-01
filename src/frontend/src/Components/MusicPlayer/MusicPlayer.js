@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
-const MusicPlayer = ({ src, title, artist, onEnded, onNext }) => {
+const MusicPlayer = ({ src, title, artist, onEnded, onNext, onPrevious, hasNext, hasPrevious }) => {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -80,9 +80,16 @@ const MusicPlayer = ({ src, title, artist, onEnded, onNext }) => {
 
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginLeft: 16, marginRight: 16 }}>
         <button
-          style={{ background: "none", border: "none", color: "#fff", fontSize: 20, cursor: "pointer" }}
+          style={{ 
+            background: "none", 
+            border: "none", 
+            color: hasPrevious ? "#fff" : "#666", 
+            fontSize: 20, 
+            cursor: hasPrevious ? "pointer" : "not-allowed" 
+          }}
           title="Anterior"
-          disabled
+          onClick={onPrevious}
+          disabled={!hasPrevious}
         >⏮️</button>
 
         <button
@@ -94,10 +101,16 @@ const MusicPlayer = ({ src, title, artist, onEnded, onNext }) => {
         </button>
 
         <button
-          style={{ background: "none", border: "none", color: "#fff", fontSize: 20, cursor: "pointer" }}
+          style={{ 
+            background: "none", 
+            border: "none", 
+            color: hasNext ? "#fff" : "#666", 
+            fontSize: 20, 
+            cursor: hasNext ? "pointer" : "not-allowed" 
+          }}
           title="Próxima"
-          onClick={onNext} // chama o avanço manual
-          disabled={!onNext}
+          onClick={onNext}
+          disabled={!hasNext}
         >⏭️</button>
       </div>
 

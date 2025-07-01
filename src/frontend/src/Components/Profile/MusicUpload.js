@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Upload, Music, X, Play, Pause, Check, AlertCircle } from 'lucide-react';
 import './MusicUpload.css';
 
-export default function MusicUpload() {
+export default function MusicUpload({ onClose }) {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const [currentPlaying, setCurrentPlaying] = useState(null);
@@ -166,11 +166,37 @@ export default function MusicUpload() {
     ));
   };
 
+  // Função para fechar o upload
+  const handleClose = () => {
+    // Limpa URLs dos arquivos para evitar vazamento de memória
+    uploadedFiles.forEach(file => {
+      if (file.url) {
+        URL.revokeObjectURL(file.url);
+      }
+    });
+    
+    // Chama a função onClose se foi fornecida
+    if (onClose) {
+      onClose();
+    }
+  };
+
   return (
     <div className="upload-page">
       <div className="upload-container">
-        <h1 className="upload-title">Upload de Músicas</h1>
-        <p className="upload-subtitle">Faça upload dos seus arquivos de áudio</p>
+        <div className="upload-header">
+          <div>
+            <h1 className="upload-title">Upload de Músicas</h1>
+            <p className="upload-subtitle">Faça upload dos seus arquivos de áudio</p>
+          </div>
+          <button 
+            className="close-button"
+            onClick={handleClose}
+            title="Fechar"
+          >
+            <X size={24} />
+          </button>
+        </div>
 
         {/* Área de Drop */}
         <div 

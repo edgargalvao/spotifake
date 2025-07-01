@@ -1,8 +1,9 @@
 from django.urls import path, include
 from .views import login_user, check_user_exists, logout_user, profile, create_playlist, view_playlist, all_playlists, register_user
-from .views import SongListAPIView, PlaylistListAPIView, UserProfileAPIView
+from .views import SongListAPIView, PlaylistListAPIView, UserProfileAPIView, UserListAPIView
 from rest_framework.routers import DefaultRouter
 from .views import SongViewSet, SongUploadAPIView, PlaylistFeedView, delete_playlist, create_playlist_api, update_playlist
+from .views import follow_user, unfollow_user, FollowingPlaylistsView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -29,6 +30,12 @@ urlpatterns = [
     path('api/playlists/<int:pk>/delete/', delete_playlist, name='delete-playlist'),
     path('api/playlists/create/', create_playlist_api, name='create-playlist-api'),
     path('api/playlists/<int:pk>/update/', update_playlist, name='update_playlist'),
+
+    # URLs para funcionalidade de seguir
+    path('api/users/', UserListAPIView.as_view(), name='user-list'),
+    path('api/follow/', follow_user, name='follow-user'),
+    path('api/unfollow/', unfollow_user, name='unfollow-user'),
+    path('api/following/playlists/<int:user_id>/', FollowingPlaylistsView.as_view(), name='following-playlists'),
 
     path('api/', include(router.urls)),
 

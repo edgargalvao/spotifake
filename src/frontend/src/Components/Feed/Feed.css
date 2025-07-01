@@ -355,6 +355,108 @@
   margin-bottom: 12px;
 }
 
+/* ===== USER COMPONENTS ===== */
+.users-section {
+  margin-bottom: 32px;
+}
+
+.users-section h3 {
+  color: #fff;
+  margin-bottom: 16px;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.user-card {
+  background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.2);
+  border-color: rgba(79, 172, 254, 0.3);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-name {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.user-username {
+  color: #888;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.follow-button {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.follow-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.follow-button.following {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+}
+
+.follow-button.following:hover {
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.following-playlists-section {
+  margin-top: 32px;
+}
+
+.following-playlists-section h3 {
+  color: #fff;
+  margin-bottom: 16px;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.empty-sub-message {
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
   .feed-page {
@@ -398,6 +500,11 @@
   .song-details {
     margin-right: 8px;
   }
+
+  .users-section h3,
+  .following-playlists-section h3 {
+    font-size: 1.2rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -430,5 +537,18 @@
   .song-artist,
   .song-album {
     font-size: 0.8rem;
+  }
+
+  .user-card {
+    padding: 12px;
+  }
+  
+  .user-name {
+    font-size: 0.95rem;
+  }
+  
+  .follow-button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
   }
 }

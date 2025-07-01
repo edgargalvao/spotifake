@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Song, Playlist, UserProfile
+from .models import Song, Playlist, UserProfile, UserFollow
 from django.contrib.auth.models import User
 
 # 1.1. Serializer para Song (Música)
@@ -103,8 +103,55 @@ class PlaylistFeedSerializer(serializers.ModelSerializer):
                 'nome': user_profile.name,
                 'imagem_perfil': self.context['request'].build_absolute_uri(user_profile.icon_image.url) if user_profile.icon_image else None
             }
-        except:
+        except AttributeError:
             return {
                 'nome': obj.user.username,
                 'imagem_perfil': None
             }
+
+# Serializer para UserFollow
+class UserFollowSerializer(serializers.ModelSerializer):
+    follower_username = serializers.CharField(source='follower.username', read_only=True)
+    following_username = serializers.CharField(source='following.username', read_only=True)
+    
+    class Meta:
+        model = UserFollow
+        fields = ('id', 'follower', 'following', 'follower_username', 'following_username', 'created_at')
+        read_only_fields = ('id', 'created_at')
+
+# Serializer para listar usuários que podem ser seguidos
+class UserListSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    username = serializers.CharField()
+    profile_name = serializers.SerializerMethodField()
+    profile_image = serializers.SerializerMethodField()
+    is_following = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'profile_name', 'profile_image', 'is_following')
+    
+    def get_profile_name(self, obj):
+        try:
+            return obj.userprofile.name
+        except AttributeError:
+            return obj.username
+    
+    def get_profile_image(self, obj):
+        try:
+            if obj.userprofile.icon_image:
+                request = self.context.get('request')
+                if request:
+                    return request.build_absolute_uri(obj.userprofile.icon_image.url)
+        except AttributeError:
+            pass
+        return None
+    
+    def get_is_following(self, obj):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user') and request.user.is_authenticated:
+            return UserFollow.objects.filter(
+                follower=request.user,
+                following=obj
+            ).exists()
+        return False

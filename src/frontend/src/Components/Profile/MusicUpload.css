@@ -17,19 +17,46 @@
 }
 
 /* Header */
+.upload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+
+.upload-header > div {
+  text-align: left;
+}
+
 .upload-title {
   font-size: 2.5rem;
   font-weight: bold;
   color: #fff;
   margin: 0 0 8px 0;
-  text-align: center;
 }
 
 .upload-subtitle {
   font-size: 1.1rem;
   color: #b0b0b0;
-  margin: 0 0 40px 0;
-  text-align: center;
+  margin: 0;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  color: #b0b0b0;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Drop Zone */

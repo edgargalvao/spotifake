@@ -69,10 +69,7 @@ export default function MusicProfile({ user, onSelectSong, onPlayPlaylist }) {
       {showUploadModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <button className="close-modal-button" onClick={() => setShowUploadModal(false)}>
-              ✖
-            </button>
-            <MusicUpload />
+            <MusicUpload onClose={() => setShowUploadModal(false)} />
           </div>
         </div>
       )}
