@@ -92,7 +92,7 @@ const MainPage = () => {
 
       <main className="main-content">
         <div className="content-area">
-          <Feed  />
+          <Feed onPlayPlaylist={handlePlayPlaylist} />
         </div>
       </main>
 

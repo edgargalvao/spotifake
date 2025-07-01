@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Feed.css';
 
-const Feed = () => {
+const Feed  = ({ onPlayPlaylist }) => {
   const [activeTab, setActiveTab] = useState('playlists');
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +50,13 @@ const Feed = () => {
       : playlist.musicas.slice(0, maxSongsToShow);
 
     return (
-      <div className="playlist-card">
+        <div className="playlist-card">
+          <button
+              className="play-button"
+              onClick={() => onPlayPlaylist(playlist.musicas)}
+            >
+              ▶️ Tocar Playlist
+        </button>
         {/* Header da Playlist */}
         <div className="playlist-header">
           <div className="playlist-cover">
