@@ -164,50 +164,14 @@ classDiagram
         +str() string
     }
 
-    User ||--|| UserProfile : "1:1"
-    User ||--o{ Playlist : "1:N creates"
-    Playlist }o--o{ Song : "N:N contains"
-    User ||--o{ UserFollow : "1:N follows"
-    User ||--o{ UserFollow : "1:N followed_by"
+    User "1" -- "1" UserProfile : has
+    User "1" -- "N" Playlist : creates
+    Playlist "N" -- "N" Song : contains
+
+    User "1" -- "N" UserFollow : is followed by
+    UserFollow "N" -- "1" User : follows
 ```
 
-#### Versão ASCII (Para Google Docs)
-
-```
-┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
-│      User       │ 1:1  │  UserProfile    │      │      Song       │
-├─────────────────┤ ────►├─────────────────┤      ├─────────────────┤
-│ +id: int        │      │ +id: int        │      │ +id: int        │
-│ +username: str  │      │ +name: str      │      │ +title: str     │
-│ +email: str     │      │ +icon_image     │      │ +artist: str    │
-│ +password: str  │      │ +user: FK       │      │ +album: str     │
-│ +date_joined    │      │ +playlists: M2M │      │ +genre: str     │
-└─────────────────┘      └─────────────────┘      │ +audio_file     │
-         │                                        │ +cover_image    │
-         │ 1:N                                    │ +created_at     │
-         ▼                                        └─────────────────┘
-┌─────────────────┐                                        ▲
-│    Playlist     │                                        │
-├─────────────────┤                                        │ N:N
-│ +id: int        │                                        │
-│ +name: str      │ ──────────────────────────────────────┘
-│ +user: FK       │
-│ +song: M2M      │
-│ +created_at     │
-└─────────────────┘
-
-         ▲
-         │ 1:N
-         │
-┌─────────────────┐
-│   UserFollow    │
-├─────────────────┤
-│ +id: int        │
-│ +follower: FK   │ ──► User (quem segue)
-│ +following: FK  │ ──► User (quem é seguido)
-│ +created_at     │
-└─────────────────┘
-```
 
 ### Relacionamentos das Classes
 
@@ -249,42 +213,6 @@ graph TB
     H --> P["Excluir Playlist"]
     J --> Q["Ver Usuários Disponíveis"]
     J --> R["Deixar de Seguir"]
-```
-
-#### Versão ASCII (Para Google Docs)
-
-```
-                 Casos de Uso - Sistema Spotifake
-
-┌───────────────────────────┐
-│  Usuário Não Autenticado │
-└─────────────┬─────────────┘
-              │
-              ├── Fazer Login
-              └── Registrar-se
-                     │
-                     ▼
-┌───────────────────────────┐
-│   Usuário Autenticado    │
-└─────────────┬─────────────┘
-              │
-              ├── Visualizar Feed ────── Ver Playlists de Outros Usuários
-              │
-              ├── Reproduzir Música ──── Controlar Reprodução
-              │                         (Play, Pause, Próxima, Anterior)
-              │
-              ├── Criar Playlist ─────── Adicionar Músicas à Playlist
-              │
-              ├── Gerenciar Playlists ─── Editar Playlist
-              │                      └── Excluir Playlist
-              │
-              ├── Upload de Música ───── Adicionar Nova Música ao Sistema
-              │
-              ├── Seguir Usuários ────── Ver Usuários Disponíveis
-              │                     └── Deixar de Seguir
-              │
-              └── Visualizar Perfil ──── Ver Informações Pessoais
-                                    └── Gerenciar Dados do Usuário
 ```
 
 ### Especificação de Casos de Uso
