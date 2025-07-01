@@ -950,7 +950,7 @@ git --version
 
 #### 1. Clonar o Repositório
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/edgargalvao/spotifake.git
 cd spotifake
 ```
 
