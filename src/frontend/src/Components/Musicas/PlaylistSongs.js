@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './PlaylistSongs.css';
+import PlaylistModal from './PlaylistModal';
 
-function PlaylistSongs({ userId, onSelectSong }) {
+function PlaylistSongs({ userId, onSelectSong, onPlayPlaylist  }) {
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -188,6 +189,20 @@ function PlaylistSongs({ userId, onSelectSong }) {
                                     <div className="playlist-description">{playlist.musicas?.length || 0} músicas</div>
                                 </div>
                                 <div className="playlist-actions">
+                                     {/* Botão Tocar Tudo */}
+                                    <button onClick={(e) => 
+                                    {
+                                        e.stopPropagation();
+                                        if (playlist.musicas && playlist.musicas.length > 0) {
+                                            onPlayPlaylist(playlist.musicas);
+                                        } else {
+                                            alert('Playlist vazia!');
+                                        }
+                                        }}
+                                        title="Tocar toda a playlist"
+                                    >
+                                        ▶️
+                                    </button>
                                     <button onClick={(e) => { e.stopPropagation(); openEditModal(playlist); }}>✏️</button>
                                     <button onClick={(e) => { e.stopPropagation(); handleDelete(playlist.id); }}>🗑️</button>
                                 </div>
@@ -229,43 +244,19 @@ function PlaylistSongs({ userId, onSelectSong }) {
                 </div>
             )}
 
-            {showCreateModal && (
-                <div className="modal-overlay" onClick={() => !creating && setShowCreateModal(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <h3>{isEditing ? 'Editar Playlist' : 'Criar Nova Playlist'}</h3>
-                        <label>
-                            Nome da Playlist:
-                            <input
-                                type="text"
-                                value={newPlaylistName}
-                                onChange={(e) => setNewPlaylistName(e.target.value)}
-                                disabled={creating}
-                            />
-                        </label>
-                        <div className="song-selection">
-                            {songs.length === 0 && <p>Carregando músicas...</p>}
-                            {songs.map((song) => (
-                                <label key={song.id}>
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedSongs.has(song.id)}
-                                        onChange={() => toggleSongSelection(song.id)}
-                                        disabled={creating}
-                                    />
-                                    {song.titulo} - {song.artista}
-                                </label>
-                            ))}
-                        </div>
-                        {createError && <p className="error-message">{createError}</p>}
-                        <div className="modal-actions">
-                            <button onClick={() => setShowCreateModal(false)} disabled={creating}>Cancelar</button>
-                            <button onClick={submitPlaylist} disabled={creating}>
-                                {creating ? 'Salvando...' : isEditing ? 'Salvar' : 'Criar'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+<PlaylistModal
+  isOpen={showCreateModal}
+  onClose={() => setShowCreateModal(false)}
+  isEditing={isEditing}
+  playlistName={newPlaylistName}
+  setPlaylistName={setNewPlaylistName}
+  songs={songs}
+  selectedSongs={selectedSongs}
+  toggleSongSelection={toggleSongSelection}
+  onSubmit={submitPlaylist}
+  creating={creating}
+  createError={createError}
+/>
         </div>
     );
 }

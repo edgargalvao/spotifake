@@ -5,7 +5,7 @@ import PlaylistSongs from '../Musicas/PlaylistSongs.js';
 import SongList from '../Musicas/SongList';
 import MusicPlayer from '../MusicPlayer/MusicPlayer';
 
-export default function MusicProfile({ user, onSelectSong }) {
+export default function MusicProfile({ user, onSelectSong, onPlayPlaylist }) {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [currentSong, setCurrentSong] = useState(null);
   const [currentTitle, setCurrentTitle] = useState('');
@@ -60,8 +60,12 @@ export default function MusicProfile({ user, onSelectSong }) {
           Upload de Músicas
         </button>
       </div>
-      <PlaylistSongs userId={user?.id} />
-      {/* Lista de músicas */}
+      <PlaylistSongs
+        userId={user?.id}
+        onSelectSong={onSelectSong}
+        onPlayPlaylist={onPlayPlaylist} // Repassa para PlaylistSongs
+      />
+
       <SongList onSelect={handleSelectSong} />
       {/* Modal */}
       {showUploadModal && (
