@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 import Profile from '../Profile/Profile';
+import Feed from '../Feed/Feed';
 
 const MainPage = () => {
   const [user, setUser] = useState(null);
@@ -18,15 +19,13 @@ const MainPage = () => {
       <aside className="sidebar">
         <div className="sidebar-content">
           <h3>Menu</h3>
-          {/* Exemplo de como usar a informação */}
           {user && <p>Bem-vindo, {user.username}!</p>}
         </div>
       </aside>
 
       <main className="main-content">
         <div className="content-area">
-          {/* Passe o usuário como prop para outros componentes */}
-          <Profile user={user} />
+          <Profile user={user}/>
         </div>
       </main>
 

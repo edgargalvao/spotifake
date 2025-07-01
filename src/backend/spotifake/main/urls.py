@@ -19,7 +19,8 @@ urlpatterns = [
     path('playlists/', all_playlists, name='all_playlists'),
 
     path('api/songs/', SongListAPIView.as_view(), name='api_songs'),
-    path('api/playlists/', PlaylistListAPIView.as_view(), name='api_playlists'),
     path('api/userprofiles/', UserProfileAPIView.as_view(), name='api_userprofiles'),
+    path('api/playlists/', PlaylistListAPIView.as_view(), name='playlist-list'),
     path('api/', include(router.urls)),
+
 ]

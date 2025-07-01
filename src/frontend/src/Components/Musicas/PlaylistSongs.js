@@ -1,52 +1,100 @@
-import React, { useEffect, useState } from 'react';
-import './PlaylistSongs.css'; 
+// Exemplo de como fazer a requisição no React
+import React, { useState, useEffect } from 'react';
 
-export default function PlaylistSongs() {
-  const [songs, setSongs] = useState([]);
-  const [loading, setLoading] = useState(true);
+function PlaylistSongs({userId}) {
+    const [playlists, setPlaylists] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch('/api/songs/')
-      .then(response => response.json())
-      .then(data => {
-        setSongs(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Erro ao buscar músicas:", error);
-        setLoading(false);
-      });
-  }, []);
+    useEffect(() => {
+        if (!userId) {
+            setError('ID do usuário não fornecido');
+            setLoading(false);
+            return;
+        }
 
-  if (loading) return <p className="loading-text">Carregando músicas...</p>;
+        fetchPlaylists();
+    }, [userId]);
 
-  return (
-    <div className="playlist-container">
-      <h2 className="playlist-title">Todas as Músicas</h2>
+    const fetchPlaylists = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            
+            console.log('Fazendo requisição para userId:', userId);
+            
+            // Fazendo a requisição com o userId como parâmetro
+            const response = await fetch(`http://localhost:8000/api/playlists/?userId=${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', // Para incluir cookies de sessão se necessário
+            });
 
-      {songs.length === 0 ? (
-        <p className="no-songs-text">Nenhuma música encontrada.</p>
-      ) : (
-        <ul className="song-list">
-          {songs.map(song => (
-            <li key={song.id} className="song-item">
-              <div className="cover-image-wrapper">
-                {song.cover_image ? (
-                  <img src={song.cover_image} alt={song.title} className="cover-image" />
-                ) : (
-                  <div className="cover-placeholder">🎵</div>
-                )}
-              </div>
-              <div className="song-details">
-                <h3 className="song-title">{song.title}</h3>
-                <p className="song-artist">{song.artist}</p>
-                <p className="song-album">{song.album}</p>
-                <span className="song-genre">{song.genre}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+            console.log('Status da resposta:', response.status);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Erro na resposta:', errorData);
+                throw new Error(errorData.error || `Erro HTTP: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Resposta completa da API:', data);
+            
+            // Com a nova estrutura de resposta
+            if (data.success && data.playlists) {
+                setPlaylists(data.playlists);
+                console.log(`${data.count} playlists carregadas`);
+            } else if (data.error) {
+                throw new Error(data.error);
+            } else {
+                // Fallback para estrutura antiga
+                setPlaylists(Array.isArray(data) ? data : []);
+            }
+        } catch (err) {
+            console.error('Erro ao buscar playlists:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) return <div>Carregando playlists...</div>;
+    if (error) return <div>Erro: {error}</div>;
+
+    return (
+        <div>
+            <h2>Suas Playlists ({playlists.length})</h2>
+            {playlists.length === 0 ? (
+                <p>Nenhuma playlist encontrada para este usuário.</p>
+            ) : (
+                <div>
+                    {playlists.map(playlist => (
+                        <div key={playlist.id} style={{ border: '1px solid #ccc', margin: '10px', padding: '10px' }}>
+                            <h3>{playlist.nome}</h3>
+                            <p>Criado por: {playlist.usuario}</p>
+                            <p>Músicas: {playlist.musicas ? playlist.musicas.length : 0}</p>
+                            
+                            {playlist.musicas && playlist.musicas.length > 0 && (
+                                <div>
+                                    <h4>Músicas:</h4>
+                                    <ul>
+                                        {playlist.musicas.map(musica => (
+                                            <li key={musica.id}>
+                                                {musica.titulo} - {musica.artista}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 }
+
+export default PlaylistSongs;

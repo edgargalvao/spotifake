@@ -46,7 +46,7 @@ export default function MusicProfile({ user }) {
           Upload de Músicas
         </button>
       </div>
-      <PlaylistSongs  />
+      <PlaylistSongs userId={user?.id} />
       {/* Modal */}
       {showUploadModal && (
         <div className="modal-overlay">

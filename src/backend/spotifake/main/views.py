@@ -17,10 +17,6 @@ class SongListAPIView(generics.ListAPIView):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
 
-class PlaylistListAPIView(generics.ListAPIView):
-    queryset = Playlist.objects.all()
-    serializer_class = PlaylistSerializer
-
 class UserProfileAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
@@ -161,3 +157,63 @@ def register_user(request):
 class SongViewSet(viewsets.ModelViewSet):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
+
+
+class PlaylistListAPIView(generics.ListAPIView):
+    serializer_class = PlaylistSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        user_id = self.request.GET.get('userId', None)
+        print(f"DEBUG: Received userId: {user_id}")  # Print simples para debug
+        
+        if user_id is not None:
+            try:
+                # Verifica se o usuário existe
+                user = User.objects.get(id=user_id)
+                print(f"DEBUG: User found: {user.username}")
+                
+                # Busca as playlists do usuário com prefetch para otimizar
+                playlists = Playlist.objects.filter(user__id=user_id).prefetch_related('song')
+                print(f"DEBUG: Found {playlists.count()} playlists for user {user_id}")
+                
+                # Debug: mostra as playlists encontradas
+                for playlist in playlists:
+                    print(f"DEBUG: Playlist: {playlist.name} - Songs: {playlist.song.count()}")
+                
+                return playlists
+            except User.DoesNotExist:
+                print(f"ERROR: User with id {user_id} does not exist")
+                return Playlist.objects.none()
+            except Exception as e:
+                print(f"ERROR: Error in get_queryset: {str(e)}")
+                return Playlist.objects.none()
+        
+        print("DEBUG: No userId provided")
+        return Playlist.objects.none()
+
+    def get(self, request, *args, **kwargs):
+        user_id = request.GET.get('userId', None)
+        
+        if not user_id:
+            return JsonResponse({
+                'error': 'userId é obrigatório',
+                'message': 'Forneça o parâmetro userId na URL'
+            }, status=400)
+        
+        try:
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset, many=True)
+            
+            return JsonResponse({
+                'success': True,
+                'count': len(serializer.data),
+                'userId': user_id,
+                'playlists': serializer.data
+            }, safe=False)
+            
+        except Exception as e:
+            return JsonResponse({
+                'error': str(e),
+                'success': False
+            }, status=500)
