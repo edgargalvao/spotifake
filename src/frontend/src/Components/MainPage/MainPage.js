@@ -13,17 +13,16 @@ const MainPage = () => {
   const [currentSong, setCurrentSong] = useState(null);
   const [currentTitle, setCurrentTitle] = useState('');
   const [currentArtist, setCurrentArtist] = useState('');
+  const [isIndividualSong, setIsIndividualSong] = useState(false);
 
-  // Quando muda a música da fila, atualiza o player
   useEffect(() => {
+    if (isIndividualSong) return; // não faz nada se for música avulsa
+  
     if (playlistQueue.length > 0 && currentIndex < playlistQueue.length) {
       const song = playlistQueue[currentIndex];
-      const audioUrl = song.arquivo_audio.startsWith('http')
-        ? song.arquivo_audio
-        : `http://localhost:8000${song.arquivo_audio}`;
-      setCurrentSong(audioUrl);
-      setCurrentTitle(song.titulo);
-      setCurrentArtist(song.artista);
+      setCurrentSong(song.src);
+      setCurrentTitle(song.title);
+      setCurrentArtist(song.artist);
     } else {
       setCurrentSong(null);
       setCurrentTitle('');
@@ -31,11 +30,22 @@ const MainPage = () => {
       setPlaylistQueue([]);
       setCurrentIndex(0);
     }
-  }, [playlistQueue, currentIndex]);
+  }, [playlistQueue, currentIndex, isIndividualSong]);
+  
 
-  // Função para tocar toda a playlist
-  const handlePlayPlaylist = (musicas) => {
-    setPlaylistQueue(musicas);
+  const handlePlayPlaylist = (songs) => {
+    if (!Array.isArray(songs) || songs.length === 0) return;
+  
+    const formatted = songs.map(song => ({
+      src: song.arquivo_audio.startsWith('http')
+        ? song.arquivo_audio
+        : `http://localhost:8000${song.arquivo_audio}`,
+      title: song.titulo,
+      artist: song.artista
+    }));
+  
+    setIsIndividualSong(false);   // <-- é uma playlist agora
+    setPlaylistQueue(formatted);
     setCurrentIndex(0);
   };
 
@@ -52,15 +62,14 @@ const MainPage = () => {
     }
   };
 
-  // Tocar música avulsa (clicada individualmente)
   const handleSelectSong = (audioUrl, title, artist) => {
+    setIsIndividualSong(true); 
     setPlaylistQueue([]);
     setCurrentIndex(0);
     setCurrentSong(audioUrl);
     setCurrentTitle(title);
     setCurrentArtist(artist);
   };
-
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -72,13 +81,10 @@ const MainPage = () => {
     <div className="dashboard-container">
       <aside className="sidebar">
         <div className="sidebar-content">
-          <h3>Menu</h3>
-          {user && <p>Bem-vindo, {user.username}!</p>}
-          {/* Passe handleSelectSong para o Profile */}
           <Profile
             user={user}
             onSelectSong={handleSelectSong}
-            onPlayPlaylist={handlePlayPlaylist} // Passa para o Profile
+            onPlayPlaylist={handlePlayPlaylist} 
           />
         </div>
         
@@ -86,7 +92,6 @@ const MainPage = () => {
 
       <main className="main-content">
         <div className="content-area">
-          {/* Passe o usuário como prop para outros componentes */}
           <Feed  />
         </div>
       </main>
@@ -105,12 +110,12 @@ const MainPage = () => {
       }}>
         {/* Passe as props para o player global */}
         <MusicPlayer
-  src={currentSong}
-  title={currentTitle}
-  artist={currentArtist}
-  onEnded={handleSongEnded}   // toca a próxima automaticamente
-  onNext={handleSongEnded}    // botão "⏭️" também avança
-/>
+            src={currentSong}
+            title={currentTitle}
+            artist={currentArtist}
+            onEnded={handleSongEnded}   // toca a próxima automaticamente
+            onNext={handleSongEnded}    // botão "⏭️" também avança
+          />
         </footer>
     </div>
   );

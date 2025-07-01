@@ -7,6 +7,7 @@ const MusicPlayer = ({ src, title, artist, onEnded, onNext }) => {
   const [volume, setVolume] = useState(0.6);
   const duration = audioRef.current?.duration || 0;
   const currentTime = audioRef.current?.currentTime || 0;
+  console.log("Tocando src:", src);
 
   // Tocar automaticamente ao mudar a música
   useEffect(() => {

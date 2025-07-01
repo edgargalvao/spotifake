@@ -54,18 +54,16 @@ export default function MusicProfile({ user, onSelectSong, onPlayPlaylist }) {
             </p>
           </div>
         </div> */}
-
-        {/* Botão que abre o modal */}
-        <button className="open-upload-modal-button" onClick={() => setShowUploadModal(true)}>
-          Upload de Músicas
-        </button>
       </div>
       <PlaylistSongs
         userId={user?.id}
         onSelectSong={onSelectSong}
         onPlayPlaylist={onPlayPlaylist} // Repassa para PlaylistSongs
       />
-
+        {/* Botão que abre o modal */}
+        <button className="open-upload-modal-button" onClick={() => setShowUploadModal(true)}>
+          Upload de Músicas
+        </button><br /><br />
       <SongList onSelect={handleSelectSong} />
       {/* Modal */}
       {showUploadModal && (
