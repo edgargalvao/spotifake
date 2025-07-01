@@ -1,40 +1,370 @@
-.playlist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
+/* Container principal */
+.playlist-container {
+  width: 100%;
+  max-width: 100%;
+  padding: 20px;
+  background-color: #121212;
+  color: #ffffff;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-.playlist-card {
-  background: #f5f5f5;
-  border-radius: 10px;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+.playlist-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+/* Loading */
+.loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #333;
+  border-top: 4px solid #1db954;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error states */
+.error-container, .empty-container {
   text-align: center;
+  padding: 60px 20px;
 }
 
-.playlist-card:hover {
-  transform: translateY(-5px);
+.error-message, .empty-message {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: #b3b3b3;
 }
 
-.cover-image-wrapper.large {
+.retry-btn {
+  background-color: #1db954;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.retry-btn:hover {
+  background-color: #1ed760;
+}
+
+/* Lista de playlists */
+.playlist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.playlist-item {
+  background-color: #181818;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: background-color 0.2s;
+}
+
+.playlist-item:hover {
+  background-color: #282828;
+}
+
+/* Header da playlist */
+.playlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.playlist-header:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.playlist-info-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+/* Imagem da capa */
+.cover-image-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.playlist-cover-image {
   width: 100%;
-  max-width: 180px;
-  height: 180px;
-  margin-bottom: 1rem;
+  height: 100%;
+  object-fit: cover;
+}
+
+.playlist-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #333, #555);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playlist-icon {
+  font-size: 24px;
+}
+
+/* Detalhes da playlist */
+.playlist-details {
+  flex: 1;
 }
 
 .playlist-name {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #ffffff;
+}
+
+.playlist-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.user-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1db954, #1ed760);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
   font-weight: bold;
-  color: #222;
-  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.username {
+  font-size: 0.9rem;
+  color: #b3b3b3;
 }
 
 .playlist-description {
-  font-size: 0.95rem;
-  color: #555;
+  font-size: 0.85rem;
+  color: #b3b3b3;
+}
+
+/* Botão de expansão */
+.playlist-toggle {
+  margin-left: auto;
+  padding: 8px;
+}
+
+.expand-icon {
+  display: inline-block;
+  transition: transform 0.2s;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+
+.expand-icon.expanded {
+  transform: rotate(180deg);
+}
+
+/* Lista de músicas */
+.playlist-songs {
+  border-top: 1px solid #333;
+  background-color: #0f0f0f;
+}
+
+.songs-list {
+  padding: 0;
+}
+
+.songs-header {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 1fr 60px;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #333;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #b3b3b3;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.song-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 1fr 60px;
+  gap: 16px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  align-items: center;
+}
+
+.song-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.song-number {
+  text-align: center;
+  color: #b3b3b3;
+  font-size: 0.9rem;
+}
+
+.song-info {
+  overflow: hidden;
+}
+
+.song-title {
+  color: #ffffff;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.song-artist, .song-album {
+  color: #b3b3b3;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.song-duration {
+  color: #b3b3b3;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.empty-playlist {
+  padding: 40px 16px;
+  text-align: center;
+  color: #b3b3b3;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .playlist-container {
+      padding: 16px;
+  }
+  
+  .playlist-title {
+      font-size: 1.5rem;
+  }
+  
+  .songs-header, .song-item {
+      grid-template-columns: 30px 2fr 1fr 50px;
+      gap: 12px;
+  }
+  
+  .song-album {
+      display: none;
+  }
+  
+  .songs-header .song-album {
+      display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .playlist-info-main {
+      gap: 12px;
+  }
+  
+  .cover-image-wrapper {
+      width: 48px;
+      height: 48px;
+  }
+  
+  .playlist-name {
+      font-size: 1rem;
+  }
+  
+  .songs-header, .song-item {
+      grid-template-columns: 30px 1fr 40px;
+      gap: 8px;
+  }
+  
+  .song-artist {
+      display: none;
+  }
+  
+  .songs-header .song-artist {
+      display: none;
+  }
+}
+.song-number {
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.play-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  padding: 0;
+}
+
+.play-button:hover {
+  color: #1db954; /* Cor tipo Spotify */
+  transform: scale(1.1);
+}
+.play-button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 10px;
+  color: white;
+}
+
+.playlist-actions button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 8px;
 }

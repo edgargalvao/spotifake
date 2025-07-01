@@ -60,7 +60,7 @@ export default function MusicProfile({ user, onSelectSong }) {
           Upload de Músicas
         </button>
       </div>
-      <PlaylistSongs  />
+      <PlaylistSongs userId={user?.id} />
       {/* Lista de músicas */}
       <SongList onSelect={handleSelectSong} />
       {/* Modal */}

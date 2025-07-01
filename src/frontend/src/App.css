@@ -176,10 +176,12 @@ html, body, #root {
 /* Menu Lateral */
 .sidebar {
   grid-area: sidebar;
-  background-color: #2c3e50;
+  background-color: #1a1a1a;
   color: white;
   padding: 20px;
   overflow-y: auto;
+  min-width: 570px;
+  max-width: 620px;
 }
 
 .sidebar-content {
@@ -209,7 +211,7 @@ html, body, #root {
 }
 
 .content-area h1 {
-  color: #2c3e50;
+  color: #1a1a1a;
   text-shadow: none;
   padding: 0 20px; /* padding lateral apenas */
 }

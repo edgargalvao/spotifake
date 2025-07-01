@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.models import Prefetch, Q
 from .models import Playlist, Song, UserProfile
 from .serializers import PlaylistFeedSerializer
+from django.views.decorators.http import require_http_methods
 
 
 # API Views para React consumir
@@ -254,3 +255,47 @@ class PlaylistFeedView(generics.ListAPIView):
             'user__userprofile'
         ).select_related('user').order_by('-id')
 
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_playlist(request, pk):  # <-- Aqui muda para 'pk'
+    try:
+        playlist = Playlist.objects.get(id=pk)
+        playlist.delete()
+        return JsonResponse({'success': True, 'message': 'Playlist excluída com sucesso.'}, status=200)
+    except Playlist.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Playlist não encontrada.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def create_playlist_api(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método não permitido'}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+
+        name = data.get('name')         # campo correto: name
+        user_id = data.get('user_id')   # campo correto: user
+        song_ids = data.get('song_ids', [])  # campo correto: song (lista de IDs)
+
+        if not name:
+            return JsonResponse({'success': False, 'error': 'Nome da playlist é obrigatório.'}, status=400)
+        if not user_id:
+            return JsonResponse({'success': False, 'error': 'ID do usuário é obrigatório.'}, status=400)
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Usuário não encontrado.'}, status=404)
+
+        # Criação da playlist
+        playlist = Playlist.objects.create(name=name, user=user)
+        playlist.song.set(Song.objects.filter(id__in=song_ids))
+        playlist.save()
+
+        return JsonResponse({'success': True, 'playlist_id': playlist.id})
+    
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
