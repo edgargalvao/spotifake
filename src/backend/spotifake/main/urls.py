@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views import login_user, check_user_exists, logout_user, profile, create_playlist, view_playlist, all_playlists, register_user
 from .views import SongListAPIView, PlaylistListAPIView, UserProfileAPIView
 from rest_framework.routers import DefaultRouter
-from .views import SongViewSet, SongUploadAPIView
+from .views import SongViewSet, SongUploadAPIView, PlaylistFeedView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,6 +25,8 @@ urlpatterns = [
     path('api/userprofiles/', UserProfileAPIView.as_view(), name='api_userprofiles'),
     path('api/song-upload/', SongUploadAPIView.as_view(), name='song_upload'),
     path('api/playlists/', PlaylistListAPIView.as_view(), name='playlist-list'),
+    path('api/feed/playlists/<int:user_id>/', PlaylistFeedView.as_view(), name='playlist-feed'),
+
     path('api/', include(router.urls)),
 
 ]

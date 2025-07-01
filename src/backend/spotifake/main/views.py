@@ -15,6 +15,11 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Prefetch, Q
+from .models import Playlist, Song, UserProfile
+from .serializers import PlaylistFeedSerializer
+
 
 # API Views para React consumir
 class SongListAPIView(generics.ListAPIView):
@@ -233,3 +238,19 @@ class PlaylistListAPIView(generics.ListAPIView):
                 'error': str(e),
                 'success': False
             }, status=500)
+
+class PlaylistFeedView(generics.ListAPIView):
+    serializer_class = PlaylistFeedSerializer
+    
+    def get_queryset(self):
+        # Pega o userId da URL
+        user_id = self.kwargs.get('user_id')
+        
+        # Pega todas as playlists exceto as do usuário especificado
+        return Playlist.objects.filter(
+            ~Q(user_id=user_id)
+        ).prefetch_related(
+            Prefetch('song', queryset=Song.objects.all()),
+            'user__userprofile'
+        ).select_related('user').order_by('-id')
+

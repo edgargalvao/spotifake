@@ -61,3 +61,50 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'usuario',
             'playlists',
         )
+class PlaylistFeedSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    nome = serializers.CharField(source='name')
+    usuario = serializers.CharField(source='user.username')
+    musicas = SongSerializer(source='song', many=True, read_only=True)
+    
+    # Campos extras para o feed
+    total_musicas = serializers.SerializerMethodField()
+    imagem_capa_playlist = serializers.SerializerMethodField()
+    perfil_usuario = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Playlist
+        fields = (
+            'id',
+            'nome', 
+            'usuario',
+            'musicas',
+            'total_musicas',
+            'imagem_capa_playlist',
+            'perfil_usuario'
+        )
+    
+    def get_total_musicas(self, obj):
+        return obj.song.count()
+    
+    def get_imagem_capa_playlist(self, obj):
+        # Pega a imagem de capa da primeira música que tiver
+        primeira_musica_com_capa = obj.song.filter(cover_image__isnull=False).first()
+        if primeira_musica_com_capa and primeira_musica_com_capa.cover_image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(primeira_musica_com_capa.cover_image.url)
+        return None
+    
+    def get_perfil_usuario(self, obj):
+        try:
+            user_profile = obj.user.userprofile
+            return {
+                'nome': user_profile.name,
+                'imagem_perfil': self.context['request'].build_absolute_uri(user_profile.icon_image.url) if user_profile.icon_image else None
+            }
+        except:
+            return {
+                'nome': obj.user.username,
+                'imagem_perfil': None
+            }

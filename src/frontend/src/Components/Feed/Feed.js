@@ -16,10 +16,10 @@ const Feed = () => {
   const fetchPlaylists = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('access_token'); // Ajuste conforme sua autenticação
-      const response = await fetch('/api/feed/playlists/', {
+      // Substitua '1' pelo ID do usuário atual da sua aplicação
+      const userId = 1; // Você pode pegar isso do contexto, props, ou estado global
+      const response = await fetch(`http://localhost:8000/api/feed/playlists/${userId}/`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });

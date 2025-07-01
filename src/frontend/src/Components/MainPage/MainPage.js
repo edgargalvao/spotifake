@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 
 import Profile from '../Profile/Profile';
 import MusicPlayer from '../MusicPlayer/MusicPlayer';
+import Feed from '../Feed/Feed';
 
 const MainPage = () => {
   const [user, setUser] = useState(null);
@@ -40,7 +41,7 @@ const MainPage = () => {
       <main className="main-content">
         <div className="content-area">
           {/* Passe o usuário como prop para outros componentes */}
-          
+          <Feed  />
         </div>
       </main>
 
@@ -48,7 +49,6 @@ const MainPage = () => {
         width: "100%",
         background: "#181818",
         color: "#fff",
-        position: "fixed",
         left: 0,
         bottom: 0,
         height: "80px",
