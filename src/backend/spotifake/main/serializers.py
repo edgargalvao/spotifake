@@ -11,8 +11,8 @@ class SongSerializer(serializers.ModelSerializer):
     album = serializers.CharField()                            # remove source redundante
     genero = serializers.CharField(source='genre')                # genre → genero
     arquivo_audio = serializers.FileField(source='audio_file')    # audio_file → arquivo_audio
-    imagem_capa = serializers.ImageField(source='cover_image')    # cover_image → imagem_capa
-    criado_em = serializers.DateTimeField(source='created_at')    # created_at → criado_em
+    imagem_capa = serializers.ImageField(source='cover_image', required=False, allow_null=True)    # cover_image → imagem_capa
+    criado_em = serializers.DateTimeField(source='created_at', required=False)    # created_at → criado_em
 
     class Meta:
         model = Song

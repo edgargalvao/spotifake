@@ -2,9 +2,23 @@ import React, { useState } from 'react';
 import './Profile.css';
 import MusicUpload from './MusicUpload';
 import PlaylistSongs from '../Musicas/PlaylistSongs.js';
+import SongList from '../Musicas/SongList';
+import MusicPlayer from '../MusicPlayer/MusicPlayer';
 
-export default function MusicProfile({ user }) {
+export default function MusicProfile({ user, onSelectSong }) {
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [currentSong, setCurrentSong] = useState(null);
+  const [currentTitle, setCurrentTitle] = useState('');
+  const [currentArtist, setCurrentArtist] = useState('');
+
+  const handleSelectSong = (audioUrl, title, artist) => {
+    setCurrentSong(audioUrl);
+    setCurrentTitle(title);
+    setCurrentArtist(artist);
+    if (onSelectSong) {
+      onSelectSong(audioUrl, title, artist);
+    }
+  };
 
   return (
     <div className="profile-page">
@@ -19,7 +33,7 @@ export default function MusicProfile({ user }) {
         <div className="profile-picture-wrapper">
           <div className="profile-picture">
             <div className="profile-avatar">
-              <span className="avatar-initials">LM</span>
+              <span className="avatar-initials">{user && user.username ? user.username.charAt(0).toUpperCase() : ''}</span>
             </div>
           </div>
         </div>
@@ -31,7 +45,7 @@ export default function MusicProfile({ user }) {
         </div>
 
         {/* Descrição */}
-        <div className="profile-description">
+        {/* <div className="profile-description">
           <h2 className="description-title">Sobre</h2>
           <div className="description-content">
             <p>
@@ -39,14 +53,16 @@ export default function MusicProfile({ user }) {
               R&B e influências latinas...
             </p>
           </div>
-        </div>
+        </div> */}
 
         {/* Botão que abre o modal */}
         <button className="open-upload-modal-button" onClick={() => setShowUploadModal(true)}>
           Upload de Músicas
         </button>
       </div>
-      <PlaylistSongs userId={user?.id} />
+      <PlaylistSongs  />
+      {/* Lista de músicas */}
+      <SongList onSelect={handleSelectSong} />
       {/* Modal */}
       {showUploadModal && (
         <div className="modal-overlay">
@@ -58,6 +74,10 @@ export default function MusicProfile({ user }) {
           </div>
         </div>
       )}
+      {/* Player fixo na página do perfil */}
+      {/* <div style={{ marginTop: 32 }}>
+        <MusicPlayer src={currentSong} title={currentTitle} artist={currentArtist} />
+      </div> */}
     </div>
   );
 }
